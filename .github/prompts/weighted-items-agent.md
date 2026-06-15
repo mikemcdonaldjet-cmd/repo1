@@ -66,34 +66,40 @@ For each item extracted from **all sources** (calendar docs and Slack channels):
 
 ---
 
-## STEP 4: Present proposed actions for Mike's approval
+## STEP 4: Write proposals to the Actions Summary
 
-Compile everything into the structured summary below and **send it as a direct message to Mike on Slack** (user ID: `U09PCH3F10S`) using the Slack connector. This is how Mike reviews and approves actions.
+Write the full structured summary to the file `/tmp/raid-summary.md`. A subsequent workflow step will publish this file to the GitHub Actions job summary, where Mike reviews it.
 
-Format the Slack DM as follows:
+Format the file content as follows (use GitHub Flavored Markdown):
 
----
+```
+# :dart: Weighted Items — Daily Update [DATE]
 
-:dart: **Weighted Items - Daily Update [DATE]**
+> **Proposed actions — awaiting your approval.**
+> To action items: start a new Claude Code session, paste the item numbers you want actioned, and Claude will create/update the Jira tickets.
 
-**Proposed actions — awaiting your approval:**
+## New tickets to create
 
-*New tickets to create:*
-- [CREATE] **[TYPE]** — [concise title]
-  Source: [meeting name + doc URL, or Slack channel + poster]
-  Description: [full context, owner, deadline if mentioned]
+| # | Type | Title | Owner | Deadline | Source |
+|---|------|-------|-------|----------|--------|
+| 1 | [TYPE] | [concise title] | [owner or —] | [deadline or —] | [meeting/channel] |
 
-*(or "None" if none to create)*
+_(or "None" if none to create)_
 
-*Existing tickets to update:*
-- [UPDATE] **[WI-XX]** — update via comment
-  What to add: [new information or update]
-  Source: [source]
+## Existing tickets to update
 
-*(or "None" if none to update)*
+| # | Ticket | What to add | Source |
+|---|--------|-------------|--------|
+| 1 | [WI-XX] | [new information or update] | [source] |
 
----
-_To approve: reply ✅ All, or list the item numbers you want actioned. To skip: reply ❌._
+_(or "None" if none to update)_
+
+## Sources scanned
+
+- **Calendar meetings:** [list]
+- **Google Docs read:** [list with URLs, or note any that couldn't be accessed]
+- **Slack channels:** #project-weighed-items, #proj-weighed-items-eng, #proj-weighed-items-core-pt-team, #weighted-items-program-leads, #project-weighed-items-business-pt
+```
 
 ---
 
@@ -105,5 +111,5 @@ _To approve: reply ✅ All, or list the item numbers you want actioned. To skip:
 - Always include the source in every proposed ticket description
 - For Actions: always capture the named owner and deadline if present
 - For Risks: capture impact and likelihood if mentioned
-- If a Google Doc link is in a calendar event but the doc can't be read (permissions issue etc.), note it in the DM so Mike is aware
-- If there was nothing to process today, send the DM: `:dart: Weighted Items - Daily Update [DATE]: Nothing to log today — no meeting docs found and no relevant Slack activity.`
+- If a Google Doc link is in a calendar event but the doc can't be read (permissions issue etc.), note it in the summary so Mike is aware
+- If there was nothing to process today, write to `/tmp/raid-summary.md`: `# :dart: Weighted Items — Daily Update [DATE]\n\nNothing to log today — no meeting docs found and no relevant Slack activity.`

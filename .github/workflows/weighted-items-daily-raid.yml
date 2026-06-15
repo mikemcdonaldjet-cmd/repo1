@@ -5,11 +5,6 @@ on:
     # 5:30pm BST (UTC+1, April–October). Change to '30 17' for GMT (November–March).
     - cron: '30 16 * * 1-5'
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry run — analyse only, do not DM Mike'
-        type: boolean
-        default: false
 
 jobs:
   weighted-items-analysis:
@@ -67,3 +62,13 @@ jobs:
                 }
               }
             }
+
+      - name: Publish summary to Actions page
+        if: always()
+        run: |
+          if [ -f /tmp/raid-summary.md ]; then
+            cat /tmp/raid-summary.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## :warning: No summary file found" >> $GITHUB_STEP_SUMMARY
+            echo "Claude did not produce a summary file. Check the action logs above for details." >> $GITHUB_STEP_SUMMARY
+          fi
